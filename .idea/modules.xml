@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/FTP.iml" filepath="$PROJECT_DIR$/.idea/FTP.iml" />
       <module fileurl="file://E:/Jack/FTP.iml" filepath="E:/Jack/FTP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FTP1.iml" filepath="$PROJECT_DIR$/.idea/FTP1.iml" />
     </modules>
   </component>
 </project>

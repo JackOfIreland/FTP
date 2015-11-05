@@ -1,6 +1,7 @@
 package client;
 
 import java.io.*;
+import java.net.DatagramPacket;
 
 /**
  * This module contains the presentaton logic of an Echo Client.
@@ -10,7 +11,7 @@ public class
 
         EchoClient1 {
    static final String endMessage = ".";
-   public static void main(String[] args) {
+   public static void main(String[] args) throws IOException {
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
       try {
@@ -37,12 +38,21 @@ public class
             message = br.readLine( );
 
             if ((message.trim().toLowerCase()).equals("a")){
-               done = true;
-               helper.done( );
+               String path = "C:/abc.txt";
+               File fileToSend = new File(path);
+               if (fileToSend.isFile()==true)
+               {
+                  helper.uploadFile(fileToSend);
+               }
+               else{
+                  System.out.println("File path does not point to an existing file");
+               }
+
             }
+
+
             if ((message.trim().toLowerCase()).equals("b")){
-               done = true;
-               helper.done( );
+
             }
             if ((message.trim().toLowerCase()).equals("c")){
                done = true;

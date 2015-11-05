@@ -1,5 +1,8 @@
 package client;
 
+import sun.misc.IOUtils;
+import sun.nio.ch.IOUtil;
+
 import java.net.*;
 import java.io.*;
 
@@ -34,7 +37,18 @@ public class EchoClientHelper1 {
    public String logIn(String username)
            throws SocketException, IOException {
 
-      mySocket.sendMessage(serverHost, serverPort, "100:LOGIN:" + username);
+      mySocket.sendMessage(serverHost, serverPort, "100-LOGIN-" + username);
+      String receiveMessage = mySocket.receiveMessage();
+      return receiveMessage;
+   }
+
+   public String uploadFile(File fileToSend)
+           throws SocketException, IOException {
+
+      mySocket.sendMessage(serverHost, serverPort, "200-UPLOAD-" + fileToSend);
+
+
+
       String receiveMessage = mySocket.receiveMessage();
       return receiveMessage;
    }
