@@ -1,5 +1,7 @@
 package server;
 
+import com.sun.org.apache.bcel.internal.generic.Select;
+
 import java.io.*;
 
 /**
@@ -13,6 +15,7 @@ import java.io.*;
 public class EchoServer1 {
    public static void main(String[] args) {
       int serverPort = 7;    // default port
+      String currentUser = null;
       if (args.length == 1 )
          serverPort = Integer.parseInt(args[0]);       
       try {
@@ -26,8 +29,15 @@ public class EchoServer1 {
             System.out.println("Request received");
             String message = request.getMessage( );
             System.out.println("message received: "+ message);
+            String[] messageComponants = message.split(":");
 
-            checkForDirectory(message);
+
+            switch (messageComponants[0]){
+               case "100":
+                  checkForDirectory(messageComponants[2]);
+                  mySocket.sendMessage(request.getAddress( ),
+                          request.getPort( ), "101 ok;test response");
+            }
 
             // Now send the echo to the requestor
             mySocket.sendMessage(request.getAddress( ),
@@ -43,7 +53,7 @@ public class EchoServer1 {
       File f = new File("C:\\Users\\t00168584\\Desktop\\"+ message.trim());
       if (f.exists())
       {
-         System.out.println("Welcome " + message.trim());
+         System.out.println("Directory exists for " + message.trim());
       }
       else
       {

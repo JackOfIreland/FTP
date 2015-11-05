@@ -29,7 +29,23 @@ public class EchoClientHelper1 {
 	   // now receive the echo
       echo = mySocket.receiveMessage();
       return echo;
-   } //end getEcho
+   }
+
+   public String logIn(String username)
+           throws SocketException, IOException {
+
+      mySocket.sendMessage(serverHost, serverPort, "100:LOGIN:" + username);
+      String receiveMessage = mySocket.receiveMessage();
+      return receiveMessage;
+   }
+
+   public String logOut()
+           throws SocketException, IOException {
+
+      mySocket.sendMessage( serverHost, serverPort, "400:LOGOUT:");
+      String receiveMessage = mySocket.receiveMessage();
+      return receiveMessage;
+   }
 
    public void done( ) throws SocketException {
       mySocket.close( );

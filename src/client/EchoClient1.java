@@ -14,7 +14,7 @@ public class
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
       try {
-         System.out.println("Welcome to the Echo client.\n" +
+         System.out.println("Welcome to the FTP Program.\n" +
                             "What is the name of the server host?");
          String hostName = br.readLine();
          if (hostName.length() == 0) // if user did not enter a name
@@ -27,11 +27,24 @@ public class
             new EchoClientHelper1(hostName, portNum);
          boolean done = false;
          String message, echo;
+
+         System.out.println("Please login with your username");
+         message = br.readLine( );
+         System.out.println(helper.logIn(message));
+
          while (!done) {
-            System.out.println("Enter a line to receive an echo back from the server, "
-                            + "or a single peroid to quit.");
+            System.out.println("Please choose an option: \nType A for Upload \nType B for Download \nType C for LogOff");
             message = br.readLine( );
-            if ((message.trim()).equals (endMessage)){
+
+            if ((message.trim().toLowerCase()).equals("a")){
+               done = true;
+               helper.done( );
+            }
+            if ((message.trim().toLowerCase()).equals("b")){
+               done = true;
+               helper.done( );
+            }
+            if ((message.trim().toLowerCase()).equals("c")){
                done = true;
                helper.done( );
             }
