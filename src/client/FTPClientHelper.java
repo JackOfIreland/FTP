@@ -7,6 +7,10 @@ import sun.nio.ch.IOUtil;
 import javax.swing.*;
 import java.net.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * This class is a module which provides the application logic
@@ -46,11 +50,9 @@ public class FTPClientHelper {
 
    public String uploadFile(File fileToSend)
            throws SocketException, IOException {
-
-      mySocket.sendMessage(serverHost, serverPort, "200-UPLOAD-" + fileToSend);
-
-
-
+      Path p = Paths.get(fileToSend.getPath());
+      List<String> lines = Files.readAllLines(p);
+      mySocket.sendMessage(serverHost, serverPort, "200-UPLOAD-" + lines);
       String receiveMessage = mySocket.receiveMessage();
       return receiveMessage;
    }

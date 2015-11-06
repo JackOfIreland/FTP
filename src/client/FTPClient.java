@@ -37,7 +37,7 @@ public class
          System.out.println(helper.logIn(message));
 
          while (!done) {
-            System.out.println("Please choose an option: \nType A for Upload \nType B for Download \nType C for LogOff");
+            System.out.println("\nPlease choose an option: \nType A for Upload \nType B for Download \nType C for LogOff\n");
             message = br.readLine( );
 
             if ((message.trim().toLowerCase()).equals("a")){

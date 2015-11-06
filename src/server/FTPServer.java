@@ -1,6 +1,7 @@
 package server;
 
 import com.sun.org.apache.bcel.internal.generic.Select;
+import javafx.stage.FileChooser;
 
 import java.io.*;
 
@@ -16,7 +17,11 @@ public class FTPServer {
    public static void main(String[] args) {
       int serverPort = 7;    // default port
       String currentUser=null;
-      String downloadDirectory = "C:/Users/jack";
+      String downloadDirectory = "C:/FTP Server";
+      File d = new File(downloadDirectory);
+      if (!d.exists())
+      { d.mkdir();}
+
       if (args.length == 1 )
          serverPort = Integer.parseInt(args[0]);       
       try {
@@ -46,15 +51,18 @@ public class FTPServer {
                case "200":
 
                   File s = new File(downloadDirectory);
+                  s.mkdir();
+                  s.setWritable(true);
                   if (s.exists() && s.isDirectory())
                   {
-                  FileOutputStream fos = new FileOutputStream(downloadDirectory);
-                  fos.write(Integer.parseInt(messageComponants[2]));
-                  fos.close();}
+                     String fileReceived = messageComponants[2];
+
+                     PrintWriter out = new PrintWriter("filename.txt");
+                  }
                   break;
             }
 
-            // Now send the echo to the requestor
+            // Now send the echo to the requester
             mySocket.sendMessage(request.getAddress( ),
                request.getPort( ), message);
 		   } //end while
@@ -65,17 +73,17 @@ public class FTPServer {
    } //end main
 
    private static String checkForDirectory(String message) {
-      File f = new File("C:\\Users\\t00168584\\Desktop\\"+ message.trim());
+      File f = new File("C:/FTP Server/"+ message.trim());
       if (f.exists())
       {
          System.out.println("Directory exists for " + message.trim());
-         return "Welcome back to the system," + message.trim();
+         return "Welcome back to the system, " + message.trim();
       }
       else
       {
          System.out.println("Creating directory called " + message.trim());
          f.mkdir();
-         return "We have detected you are a new user. We hope you enjoy the system, " + message.trim();
+         return "We have detected you are a new user. We hope you enjoy the system,  " + message.trim();
       }
    }
 
