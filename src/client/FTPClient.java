@@ -1,7 +1,6 @@
 package client;
 
 import java.io.*;
-import java.net.DatagramPacket;
 
 /**
  * This module contains the presentaton logic of an Echo Client.
@@ -9,12 +8,14 @@ import java.net.DatagramPacket;
  */
 public class
 
-        EchoClient1 {
+        FTPClient {
    static final String endMessage = ".";
    public static void main(String[] args) throws IOException {
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
       try {
+         /////////////////////////////////////////////////////
+
          System.out.println("Welcome to the FTP Program.\n" +
                             "What is the name of the server host?");
          String hostName = br.readLine();
@@ -24,10 +25,12 @@ public class
          String portNum = br.readLine();
          if (portNum.length() == 0)
             portNum = "7";          // default port number
-         EchoClientHelper1 helper = 
-            new EchoClientHelper1(hostName, portNum);
+         FTPClientHelper helper =
+            new FTPClientHelper(hostName, portNum);
          boolean done = false;
          String message, echo;
+
+         ///////////////////////////////////////////////////////
 
          System.out.println("Please login with your username");
          message = br.readLine( );
@@ -38,18 +41,9 @@ public class
             message = br.readLine( );
 
             if ((message.trim().toLowerCase()).equals("a")){
-               String path = "C:/abc.txt";
-               File fileToSend = new File(path);
-               if (fileToSend.isFile()==true)
-               {
-                  helper.uploadFile(fileToSend);
-               }
-               else{
-                  System.out.println("File path does not point to an existing file");
-               }
-
+               File fileToSend = helper.chooseFile();
+               helper.uploadFile(fileToSend);
             }
-
 
             if ((message.trim().toLowerCase()).equals("b")){
 

@@ -1,8 +1,10 @@
 package client;
 
+import javafx.stage.FileChooser;
 import sun.misc.IOUtils;
 import sun.nio.ch.IOUtil;
 
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 
@@ -11,12 +13,12 @@ import java.io.*;
  * for an Echo client using connectionless datagram socket.
  * @author M. L. Liu
  */
-public class EchoClientHelper1 {
+public class FTPClientHelper {
    private MyClientDatagramSocket mySocket;
    private InetAddress serverHost;
    private int serverPort;
 
-   EchoClientHelper1(String hostName, String portNum) 
+   FTPClientHelper(String hostName, String portNum)
       throws SocketException, UnknownHostException { 
   	   this.serverHost = InetAddress.getByName(hostName);
   		this.serverPort = Integer.parseInt(portNum);
@@ -52,6 +54,26 @@ public class EchoClientHelper1 {
       String receiveMessage = mySocket.receiveMessage();
       return receiveMessage;
    }
+
+   public File chooseFile()
+   {
+      JFrame frame = new JFrame();
+      frame.setVisible(true);
+      frame.setExtendedState(JFrame.ICONIFIED);
+      frame.setExtendedState(JFrame.NORMAL);
+
+      JFileChooser fc = new JFileChooser();
+      if(JFileChooser.APPROVE_OPTION == fc.showOpenDialog(null)){
+         frame.setVisible(false);
+         return fc.getSelectedFile();
+      }else {
+         System.out.println("Please ensure you choose a file");
+         System.exit(1);
+      }
+      return null;
+      // adapted from http://stackoverflow.com/questions/7494478/jfilechooser-from-a-command-line-program-and-popping-up-underneath-all-windows
+   }
+
 
    public String logOut()
            throws SocketException, IOException {

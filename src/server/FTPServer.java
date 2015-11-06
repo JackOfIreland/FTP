@@ -12,7 +12,7 @@ import java.io.*;
  * @author M. L. Liu
  */
 
-public class EchoServer1 {
+public class FTPServer {
    public static void main(String[] args) {
       int serverPort = 7;    // default port
       String currentUser=null;
@@ -36,9 +36,9 @@ public class EchoServer1 {
             switch (messageComponants[0]){
                case "100":
                   currentUser = messageComponants[2];
-                  checkForDirectory(currentUser);
+                  String returnMessage = checkForDirectory(currentUser);
                   mySocket.sendMessage(request.getAddress( ),
-                          request.getPort( ), "101 ok;test response");
+                          request.getPort( ), returnMessage);
                   break;
             }
 
@@ -64,17 +64,18 @@ public class EchoServer1 {
 	    } // end catch
    } //end main
 
-   private static void checkForDirectory(String message) {
+   private static String checkForDirectory(String message) {
       File f = new File("C:\\Users\\t00168584\\Desktop\\"+ message.trim());
       if (f.exists())
       {
          System.out.println("Directory exists for " + message.trim());
+         return "Welcome back to the system," + message.trim();
       }
       else
       {
          System.out.println("Creating directory called " + message.trim());
          f.mkdir();
-
+         return "We have detected you are a new user. We hope you enjoy the system, " + message.trim();
       }
    }
 
