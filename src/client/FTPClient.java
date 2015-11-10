@@ -14,7 +14,7 @@ public class
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
       try {
-         /////////////////////////////////////////////////////
+         /////////////////////Initialisation////////////////////////////////
 
          System.out.println("Welcome to the FTP Program.\n" +
                             "What is the name of the server host?");
@@ -30,8 +30,19 @@ public class
          boolean done = false;
          String message, echo;
 
-         ///////////////////////////////////////////////////////
+         //Create a test folder that has a file in it that we can use for upload
+         File d = new File("C:/FTP Client");
+         if (!d.exists())
+         { d.mkdir();}
 
+         File testFile = new File("C:/FTP Client/test file.txt");
+         PrintWriter pW = new PrintWriter(testFile);
+         pW.println("Hello there!");
+         pW.println("This is a test File");
+         pW.close();
+
+
+         /////////////////////Login/////////////////////
          System.out.println("Please login with your username");
          message = br.readLine( );
          System.out.println(helper.logIn(message));
@@ -40,10 +51,11 @@ public class
             System.out.println("\nPlease choose an option: \nType A for Upload \nType B for Download \nType C for LogOff\n");
             message = br.readLine( );
 
+            //////Upload///////
             if ((message.trim().toLowerCase()).equals("a")){
                File fileToSend = helper.chooseFile();
                String fileName = fileToSend.getName();
-               helper.uploadFile(fileToSend, fileName);
+               System.out.println(helper.uploadFile(fileToSend, fileName));
 
             }
 
@@ -55,7 +67,7 @@ public class
                helper.done( );
             }
             else {
-               echo = helper.getEcho( message);
+               echo = helper.getEcho(message);
                System.out.println(echo);
             }
           } // end while

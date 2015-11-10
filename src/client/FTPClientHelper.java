@@ -64,6 +64,7 @@ public class FTPClientHelper {
       frame.setExtendedState(JFrame.NORMAL);
 
       JFileChooser fc = new JFileChooser();
+      fc.setCurrentDirectory(new File("C:/FTP Client"));
       if(JFileChooser.APPROVE_OPTION == fc.showOpenDialog(null)){
          frame.setVisible(false);
          return fc.getSelectedFile();

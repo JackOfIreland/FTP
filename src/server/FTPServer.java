@@ -32,7 +32,7 @@ public class FTPServer {
          while (true) {  // forever loop
             DatagramMessage request = 
                mySocket.receiveMessageAndSender();
-            System.out.println("Request received");
+            System.out.println("\nRequest received");
             String message = request.getMessage( );
             System.out.println("message received: "+ message);
             String[] messageComponants = message.split("-");
@@ -51,23 +51,12 @@ public class FTPServer {
                case "200":
 
                   byte[] receivedBytes = mySocket.receiveFile();
-                  System.out.println(messageComponants[2]);
+                  String fileName = messageComponants[2].trim();
 
-                  File fileReceived = new File("C:\\FTP Server\\"+currentUser+"\\" + messageComponants[2].trim());
-                  System.out.println("C:\\FTP Server\\"+currentUser+"\\" + messageComponants[2].trim());
-                  FileOutputStream fos = new FileOutputStream(fileReceived);
-                  fos.write(receivedBytes);
-                  fos.close();
+                  String returnMessage = receiveFile(receivedBytes, currentUser,fileName);
 
-
-
-
-                 /* byte[] receivedBytes = mySocket.receiveFile();
-                  String fileName = messageComponants[2];
-                  File f = new File("C:/FTP Server/Jack/" + fileName);
-                  FileOutputStream fos = new FileOutputStream("C:/FTP Server/Jack/" + fileName);
-                  fos.write(receivedBytes);
-                  fos.close();     */
+                  mySocket.sendMessage(request.getAddress(),
+                          request.getPort(), returnMessage);
 
                   break;
             }
@@ -81,6 +70,16 @@ public class FTPServer {
           ex.printStackTrace( );
 	    } // end catch
    } //end main
+
+   private static String receiveFile(byte [] receivedBytes, String currentUser,String fileName) throws IOException {
+
+      File fileReceived = new File("C:\\FTP Server\\"+currentUser+"\\" + fileName);
+      System.out.println("File Received: " + fileName);
+      FileOutputStream fos = new FileOutputStream(fileReceived);
+      fos.write(receivedBytes);
+      fos.close();
+      return fileReceived.getName() + " was successfully Uploaded to " + "C:/FTP Server" +"/"+currentUser;
+   }
 
    private static String checkForDirectory(String message) {
       File f = new File("C:/FTP Server/"+ message.trim());
