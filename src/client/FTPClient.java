@@ -42,7 +42,9 @@ public class
 
             if ((message.trim().toLowerCase()).equals("a")){
                File fileToSend = helper.chooseFile();
-               helper.uploadFile(fileToSend);
+               String fileName = fileToSend.getName();
+               helper.uploadFile(fileToSend, fileName);
+
             }
 
             if ((message.trim().toLowerCase()).equals("b")){

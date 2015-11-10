@@ -27,6 +27,22 @@ static final int MAX_LEN = 100;
          this.send(datagram);
    } // end sendMessage
 
+    public void sendFile(InetAddress receiverHost,
+                            int receiverPort,
+                            File fileToSend)
+            throws IOException {
+        byte[ ] sendBuffer = new byte[(int)fileToSend.length()];
+
+        FileInputStream fis = new FileInputStream(fileToSend);
+        fis.read(sendBuffer);
+        fis.close();
+
+        DatagramPacket datagram =
+                new DatagramPacket(sendBuffer, sendBuffer.length,
+                        receiverHost, receiverPort);
+        this.send(datagram);
+    }
+
 
     public String receiveMessage()
 		throws IOException {		

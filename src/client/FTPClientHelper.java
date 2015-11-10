@@ -48,11 +48,10 @@ public class FTPClientHelper {
       return receiveMessage;
    }
 
-   public String uploadFile(File fileToSend)
+   public String uploadFile(File fileToSend, String fileName)
            throws SocketException, IOException {
-      Path p = Paths.get(fileToSend.getPath());
-      List<String> lines = Files.readAllLines(p);
-      mySocket.sendMessage(serverHost, serverPort, "200-UPLOAD-" + lines);
+      mySocket.sendMessage(serverHost, serverPort, "200-UPLOAD-" + fileName);
+      mySocket.sendFile(serverHost,serverPort,fileToSend);
       String receiveMessage = mySocket.receiveMessage();
       return receiveMessage;
    }

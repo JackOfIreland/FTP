@@ -40,7 +40,7 @@ public class FTPServer {
 
             switch (messageComponants[0]){
                case "100":
-                  currentUser = messageComponants[2];
+                  currentUser = messageComponants[2].trim();
                   String returnMessage = checkForDirectory(currentUser);
                   mySocket.sendMessage(request.getAddress( ),
                           request.getPort( ), returnMessage);
@@ -50,15 +50,25 @@ public class FTPServer {
             switch (messageComponants[0]){
                case "200":
 
-                  File s = new File(downloadDirectory);
-                  s.mkdir();
-                  s.setWritable(true);
-                  if (s.exists() && s.isDirectory())
-                  {
-                     String fileReceived = messageComponants[2];
+                  byte[] receivedBytes = mySocket.receiveFile();
+                  System.out.println(messageComponants[2]);
 
-                     PrintWriter out = new PrintWriter("filename.txt");
-                  }
+                  File fileReceived = new File("C:\\FTP Server\\"+currentUser+"\\" + messageComponants[2].trim());
+                  System.out.println("C:\\FTP Server\\"+currentUser+"\\" + messageComponants[2].trim());
+                  FileOutputStream fos = new FileOutputStream(fileReceived);
+                  fos.write(receivedBytes);
+                  fos.close();
+
+
+
+
+                 /* byte[] receivedBytes = mySocket.receiveFile();
+                  String fileName = messageComponants[2];
+                  File f = new File("C:/FTP Server/Jack/" + fileName);
+                  FileOutputStream fos = new FileOutputStream("C:/FTP Server/Jack/" + fileName);
+                  fos.write(receivedBytes);
+                  fos.close();     */
+
                   break;
             }
 
