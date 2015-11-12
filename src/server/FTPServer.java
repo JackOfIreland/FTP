@@ -59,6 +59,11 @@ public class FTPServer {
                           request.getPort(), returnUploadMessage);
                   break;
 
+               case "300":
+                  sendFileToClient(messageComponants[2],currentUser);
+                  break;
+
+
                case "400":
 
                   String returnLogOutMessage = logOut(currentUser);
@@ -84,6 +89,11 @@ public class FTPServer {
       fos.write(receivedBytes);
       fos.close();
       return fileReceived.getName().trim() + " was successfully Uploaded to " + "C:/FTP Server" +"/"+currentUser.trim();
+   }
+
+   private static void sendFileToClient(String fileName, String currentUser)
+   {
+      String path = "C:\\FTP Server\\"+currentUser+"\\" + fileName;
    }
 
    private static String checkForDirectory(String message) {
