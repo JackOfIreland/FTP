@@ -1,15 +1,14 @@
 package client;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.io.*;
 
 /**
  * This module contains the presentaton logic of an Echo Client.
  * @author M. L. Liu
  */
-public class
-
-        FTPClient {
-   static final String endMessage = ".";
+public class FTPClient {
    public static void main(String[] args) throws IOException {
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);
@@ -27,8 +26,8 @@ public class
             portNum = "7";          // default port number
          FTPClientHelper helper =
             new FTPClientHelper(hostName, portNum);
-         boolean done = false;
-         String message, echo;
+         boolean done = false, exit = false;
+         String userName ="", message, choice,  echo;
 
          //Create a test folder that has a file in it that we can use for upload
          File d = new File("C:/FTP Client");
@@ -43,34 +42,51 @@ public class
 
 
          /////////////////////Login/////////////////////
-         System.out.println("Please login with your username");
-         message = br.readLine( );
-         System.out.println(helper.logIn(message));
+         while (!exit) {
+            System.out.println("Please login with your username or type exit");
+            userName = br.readLine();
 
-         while (!done) {
-            System.out.println("\nPlease choose an option: \nType A for Upload \nType B for Download \nType C for LogOff\n");
-            message = br.readLine( );
-
-            //////Upload///////
-            if ((message.trim().toLowerCase()).equals("a")){
-               File fileToSend = helper.chooseFile();
-               String fileName = fileToSend.getName();
-               System.out.println(helper.uploadFile(fileToSend, fileName));
-
+            if(userName.toLowerCase().equals("exit")){
+               System.out.println("System shutting down...");
+               System.exit(0);
             }
 
-            if ((message.trim().toLowerCase()).equals("b")){
+            else{
+               done=false;
+               System.out.println(helper.logIn(userName));
 
-            }
-            if ((message.trim().toLowerCase()).equals("c")){
-               done = true;
-               helper.done( );
-            }
-            else {
-               echo = helper.getEcho(message);
-               System.out.println(echo);
-            }
-          } // end while
+               while (!done) {
+                  System.out.println("\n" + userName + ", please choose an option: \nType A for Upload \nType B for Download \nType C for LogOff");
+                  choice = br.readLine().toLowerCase();
+
+                  switch (choice) {
+                     //////Upload///////
+                     case "a":
+                        File fileToSend = helper.chooseFile();
+                        String fileName = fileToSend.getName();
+                        System.out.println(helper.uploadFile(fileToSend, fileName));
+                        break;
+
+                     case "b":
+
+                        System.out.println("Please enter the name of the file you want to download"); //use testDownload.txt for testing
+                        String fileToDownload = br.readLine().toLowerCase();
+                        System.out.println(helper.downloadFile(fileToDownload));
+                        break;
+
+                     case "c":
+                        System.out.println(helper.logOut(userName));
+                        done = true;
+                        break;
+
+                     default:
+                        System.out.println("Invalid option; please retry");
+
+                  }
+
+               }
+            } // end inner while
+         }
       } // end try  
       catch (Exception ex) {
          ex.printStackTrace( );

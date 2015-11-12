@@ -38,32 +38,37 @@ public class FTPServer {
             String[] messageComponants = message.split("-");
 
 
-            switch (messageComponants[0]){
-               case "100":
-                  currentUser = messageComponants[2].trim();
-                  String returnMessage = checkForDirectory(currentUser);
-                  mySocket.sendMessage(request.getAddress( ),
-                          request.getPort( ), returnMessage);
-                  break;
-            }
 
             switch (messageComponants[0]){
+               ///////Login
+               case "100":
+                  currentUser = messageComponants[2].trim();
+                  String returnLogInMessage = checkForDirectory(currentUser);
+                  mySocket.sendMessage(request.getAddress( ),
+                          request.getPort( ), returnLogInMessage);
+                  break;
+
                case "200":
 
                   byte[] receivedBytes = mySocket.receiveFile();
                   String fileName = messageComponants[2].trim();
 
-                  String returnMessage = receiveFile(receivedBytes, currentUser,fileName);
+                  String returnUploadMessage = receiveFile(receivedBytes,currentUser, fileName);
 
                   mySocket.sendMessage(request.getAddress(),
-                          request.getPort(), returnMessage);
+                          request.getPort(), returnUploadMessage);
+                  break;
 
+               case "400":
+
+                  String returnLogOutMessage = logOut(currentUser);
+                  mySocket.sendMessage(request.getAddress( ),
+                          request.getPort( ), returnLogOutMessage);
                   break;
             }
 
             // Now send the echo to the requester
-            mySocket.sendMessage(request.getAddress( ),
-               request.getPort( ), message);
+
 		   } //end while
        } // end try
 	    catch (Exception ex) {
@@ -78,7 +83,7 @@ public class FTPServer {
       FileOutputStream fos = new FileOutputStream(fileReceived);
       fos.write(receivedBytes);
       fos.close();
-      return fileReceived.getName() + " was successfully Uploaded to " + "C:/FTP Server" +"/"+currentUser;
+      return fileReceived.getName().trim() + " was successfully Uploaded to " + "C:/FTP Server" +"/"+currentUser.trim();
    }
 
    private static String checkForDirectory(String message) {
@@ -94,6 +99,11 @@ public class FTPServer {
          f.mkdir();
          return "We have detected you are a new user. We hope you enjoy the system,  " + message.trim();
       }
+   }
+
+   private static String logOut(String username) {
+      System.out.println(username + " is logging off");
+      return "Thanks for using the system, " + username + "\n\n";
    }
 
 } // end class      

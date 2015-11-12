@@ -52,6 +52,21 @@ public class FTPClientHelper {
            throws SocketException, IOException {
       mySocket.sendMessage(serverHost, serverPort, "200-UPLOAD-" + fileName);
       mySocket.sendFile(serverHost,serverPort,fileToSend);
+      String receiveMessage1 = mySocket.receiveMessage();
+      return receiveMessage1;
+   }
+
+   public String downloadFile(String fileName)
+           throws SocketException, IOException {
+      mySocket.sendMessage(serverHost, serverPort, "300-DOWNLOAD-" + fileName);
+      String receiveMessage = mySocket.receiveMessage();
+      return receiveMessage;
+   }
+
+   public String logOut(String userName)
+           throws SocketException, IOException {
+
+      mySocket.sendMessage( serverHost, serverPort, "400-LOGOUT-" + userName);
       String receiveMessage = mySocket.receiveMessage();
       return receiveMessage;
    }
@@ -74,15 +89,6 @@ public class FTPClientHelper {
       }
       return null;
       // adapted from http://stackoverflow.com/questions/7494478/jfilechooser-from-a-command-line-program-and-popping-up-underneath-all-windows
-   }
-
-
-   public String logOut()
-           throws SocketException, IOException {
-
-      mySocket.sendMessage( serverHost, serverPort, "400:LOGOUT:");
-      String receiveMessage = mySocket.receiveMessage();
-      return receiveMessage;
    }
 
    public void done( ) throws SocketException {
