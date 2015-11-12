@@ -71,7 +71,14 @@ public class FTPClient {
 
                         System.out.println("Please enter the name of the file you want to download"); //use testDownload.txt for testing
                         String fileToDownload = br.readLine().toLowerCase();
-                        System.out.println(helper.downloadFile(fileToDownload));
+                        String s = helper.downloadFile(fileToDownload);
+                        File fileDownloaded = new File("C:\\FTP Client\\" + fileToDownload);
+                        PrintWriter prW = new PrintWriter(fileDownloaded);
+                        prW.write(s);
+                        prW.close();
+
+
+
                         break;
 
                      case "c":

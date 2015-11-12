@@ -4,6 +4,7 @@ import com.sun.org.apache.bcel.internal.generic.Select;
 import javafx.stage.FileChooser;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * This module contains the application logic of an echo server
@@ -60,7 +61,17 @@ public class FTPServer {
                   break;
 
                case "300":
-                  sendFileToClient(messageComponants[2],currentUser);
+
+                  String nameOfFileToBeDownloaded = messageComponants[2].trim();
+                  System.out.println("C:\\FTP Server\\"+currentUser+"\\" + nameOfFileToBeDownloaded);
+                  String text = new Scanner( new File("C:\\FTP Server\\"+currentUser+"\\" + nameOfFileToBeDownloaded) ).useDelimiter("\\A").next();
+
+
+
+
+                  mySocket.sendMessage(request.getAddress(),
+                          request.getPort(), text);
+
                   break;
 
 
@@ -93,7 +104,8 @@ public class FTPServer {
 
    private static void sendFileToClient(String fileName, String currentUser)
    {
-      String path = "C:\\FTP Server\\"+currentUser+"\\" + fileName;
+      File outgoingFile = new File("C:\\FTP Server\\"+currentUser+"\\" + fileName);
+
    }
 
    private static String checkForDirectory(String message) {

@@ -54,8 +54,24 @@ static final int MAX_LEN = 100;
          //   received and sender's address
          DatagramMessage returnVal = new DatagramMessage( );
          returnVal.putVal(new String(receiveBuffer),
-                          datagram.getAddress( ),
-                          datagram.getPort( ));
+                 datagram.getAddress(),
+                 datagram.getPort());
          return returnVal;
    } //end receiveMessage
+
+    public void sendFile(InetAddress receiverHost,
+                         int receiverPort,
+                         File fileToSend)
+            throws IOException {
+        byte[ ] sendBuffer = new byte[(int)fileToSend.length()];
+
+        FileInputStream fis = new FileInputStream(fileToSend);
+        fis.read(sendBuffer);
+        fis.close();
+
+        DatagramPacket datagram =
+                new DatagramPacket(sendBuffer, sendBuffer.length,
+                        receiverHost, receiverPort);
+        this.send(datagram);
+    }
 } //end class
