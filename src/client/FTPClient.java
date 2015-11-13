@@ -56,7 +56,7 @@ public class FTPClient {
                System.out.println(helper.logIn(userName));
 
                while (!done) {
-                  System.out.println("\n" + userName + ", please choose an option: \nType A for Upload \nType B for Download \nType C for LogOff");
+                  System.out.println("\n" + userName + ", please choose an option: \nType A for Upload \nType B for Download \nType C for LogOut");
                   choice = br.readLine().toLowerCase();
 
                   switch (choice) {
@@ -68,20 +68,28 @@ public class FTPClient {
                         break;
 
                      case "b":
-
+                     //////download//////
                         System.out.println("Please enter the name of the file you want to download"); //use testDownload.txt for testing
                         String fileToDownload = br.readLine().toLowerCase();
-                        String s = helper.downloadFile(fileToDownload);
-                        File fileDownloaded = new File("C:\\FTP Client\\" + fileToDownload);
-                        PrintWriter prW = new PrintWriter(fileDownloaded);
-                        prW.write(s);
-                        prW.close();
 
+                        File file = new File("C:\\FTP Client\\" + fileToDownload);
+                        fileName = file.getName();
+                        String incomingContent = helper.downloadFile(fileName);
 
+                        String [] contentComponants = incomingContent.split("-");
+                        String clientMessage = contentComponants[0].trim();
+                        String content = contentComponants[1].trim();
+
+                        System.out.println(clientMessage);
+
+                        PrintWriter pW1 = new PrintWriter(file);
+                        pW1.println(content);
+                        pW1.close();
 
                         break;
 
                      case "c":
+                        ///////logout//////
                         System.out.println(helper.logOut(userName));
                         done = true;
                         break;

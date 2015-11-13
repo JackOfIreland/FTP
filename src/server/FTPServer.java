@@ -1,18 +1,9 @@
 package server;
 
-import com.sun.org.apache.bcel.internal.generic.Select;
-import javafx.stage.FileChooser;
-
 import java.io.*;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * This module contains the application logic of an echo server
- * which uses a connectionless datagram socket for interprocess 
- * communication.
- * A command-line argument is required to specify the server port.
- * @author M. L. Liu
- */
 
 public class FTPServer {
    public static void main(String[] args) {
@@ -50,7 +41,7 @@ public class FTPServer {
                   break;
 
                case "200":
-
+                  //upload to server
                   byte[] receivedBytes = mySocket.receiveFile();
                   String fileName = messageComponants[2].trim();
 
@@ -61,16 +52,15 @@ public class FTPServer {
                   break;
 
                case "300":
-
+                  //download to client
                   String nameOfFileToBeDownloaded = messageComponants[2].trim();
-                  System.out.println("C:\\FTP Server\\"+currentUser+"\\" + nameOfFileToBeDownloaded);
-                  String text = new Scanner( new File("C:\\FTP Server\\"+currentUser+"\\" + nameOfFileToBeDownloaded) ).useDelimiter("\\A").next();
+                  String filePath = "C:\\FTP Server\\"+currentUser+"\\" + nameOfFileToBeDownloaded;
 
-
-
+                  List<String> content = sendFileToClient(filePath, currentUser);
 
                   mySocket.sendMessage(request.getAddress(),
-                          request.getPort(), text);
+                          request.getPort(), nameOfFileToBeDownloaded+ " has been downloaded to C:/FTP Client.-" + content.toString());
+
 
                   break;
 
@@ -83,7 +73,6 @@ public class FTPServer {
                   break;
             }
 
-            // Now send the echo to the requester
 
 		   } //end while
        } // end try
@@ -92,39 +81,48 @@ public class FTPServer {
 	    } // end catch
    } //end main
 
+   private static List<String> sendFileToClient(String filePath, String currentUser) throws IOException {
+      List<String> content = new ArrayList<String>();
+
+      BufferedReader buffer = new BufferedReader(new FileReader(filePath));
+
+      String s;
+      while((s = buffer.readLine()) != null){
+         content.add(s);
+      }
+      System.out.println("301-"+currentUser + " is downloading " + filePath);
+      return content;
+   }
+
    private static String receiveFile(byte [] receivedBytes, String currentUser,String fileName) throws IOException {
 
       File fileReceived = new File("C:\\FTP Server\\"+currentUser+"\\" + fileName);
-      System.out.println("File Received: " + fileName);
+      System.out.println("201-File Received: " + fileName);
       FileOutputStream fos = new FileOutputStream(fileReceived);
       fos.write(receivedBytes);
       fos.close();
       return fileReceived.getName().trim() + " was successfully Uploaded to " + "C:/FTP Server" +"/"+currentUser.trim();
    }
 
-   private static void sendFileToClient(String fileName, String currentUser)
-   {
-      File outgoingFile = new File("C:\\FTP Server\\"+currentUser+"\\" + fileName);
 
-   }
 
    private static String checkForDirectory(String message) {
       File f = new File("C:/FTP Server/"+ message.trim());
       if (f.exists())
       {
-         System.out.println("Directory exists for " + message.trim());
+         System.out.println("101-Directory exists for " + message.trim());
          return "Welcome back to the system, " + message.trim();
       }
       else
       {
-         System.out.println("Creating directory called " + message.trim());
+         System.out.println("102-Creating directory called " + message.trim());
          f.mkdir();
          return "We have detected you are a new user. We hope you enjoy the system,  " + message.trim();
       }
    }
 
    private static String logOut(String username) {
-      System.out.println(username + " is logging off");
+      System.out.println("401-"+username + " is logging off");
       return "Thanks for using the system, " + username + "\n\n";
    }
 
